@@ -2,9 +2,9 @@
 
 ![](https://img.shields.io/npm/dm/create-selector.svg)![](https://img.shields.io/npm/v/create-selector.svg)![](https://img.shields.io/npm/l/create-selector.svg)[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
-Simple util that wraps reselect's `createSelector` and behaves like usual if you use it like usual. See the [reselect project](https://github.com/reactjs/reselect) for more info.
+Simple util that wraps reselect's `createSelector` but adds the ability to define selector dependencies as strings, then resolve them later.
 
-*But*, you can also pass strings as placeholders for some, or all, of the input functions. In this mode it returns a function that will create the selector when called with an object containing the missing functions as properties.
+This makes it easier to compose selectors from different parts of your app or combine functionality from different app bundles without having to have direct references to input functions when you're defining them.
 
 In this way you can defer the creation of a selector and populate it later without needing to have direct references to the input selectors when you're first defining it.
 
@@ -13,7 +13,7 @@ Just like reselect, it also attaches the last function as a `.resultFunc` proper
 ## example
 
 ```js
-import createSelector from 'create-selector'
+import { createSelector, resolveSelectors } from 'create-selector'
 
 export const selectUserData = state => state.user
 export const shouldFetchData = createSelector(
@@ -37,13 +37,9 @@ const selectorAggregator = {
   shouldFetchData
 }
 
-// and make sure they're all populated into real selectors
-for (const key in selectorAggregator) {
-  const item = selectorAggregator[key]
-  if (item.isDeferred) {
-    selectorAggregator[key] = item(selectorAggregator)
-  }
-}
+// resolves all the string references with the real ones recursively
+// until you've got an object with all your selectors combined
+resolveSelectors(selectorAggregator)
 ```
 
 that's it!
@@ -51,7 +47,8 @@ that's it!
 ## Notes
 
 - There's some tests to show this does what it's supposed to but most of the actual work happens in reselect.
-- I wrote it in ES5 because I didn't want a compile step for something so simple.
+- It tolerates mixing in *real* selectors too (even if they were created with reselect, directly).
+- I wrote it in ES5 because I'm sick of everything needing a compile step.
 
 ## install
 
