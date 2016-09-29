@@ -33,7 +33,7 @@ var resolveSelectors = function (obj) {
     for (var key in obj) {
       if (obj[key] === val) return key
     }
-    throw Error('No function found for key: ' + val)
+    throw Error('No function found for key: ' + key)
   }
 
   var isResolved = function (name) {
