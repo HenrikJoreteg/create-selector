@@ -26,16 +26,6 @@ var createSelector = function () {
 }
 
 var resolveSelectors = function (obj) {
-  var findName = function (val) {
-    // is it already just a name
-    if (obj[val]) return val
-    // if not, look for it
-    for (var key in obj) {
-      if (obj[key] === val) return key
-    }
-    throw Error('No function found for key: ' + key)
-  }
-
   var isResolved = function (name) {
     return !obj[name].deps
   }
@@ -45,7 +35,17 @@ var resolveSelectors = function (obj) {
   for (var selectorName in obj) {
     var fn = obj[selectorName]
     if (!isResolved(selectorName)) {
-      fn.deps = fn.deps.map(findName)
+      fn.deps = fn.deps.map(function (val) {
+        if (!val) {
+          throw Error('Invalid input dependency found for ' + selectorName)
+        }
+        // is it already just a name
+        if (obj[val]) return val
+        // if not, look for it
+        for (var key in obj) {
+          if (obj[key] === val) return key
+        }
+      })
     } else {
       hasAtLeastOneResolved = true
     }
