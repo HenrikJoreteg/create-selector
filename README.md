@@ -48,7 +48,6 @@ that's it!
 
 - There's some tests to show this does what it's supposed to but most of the actual work happens in reselect.
 - It tolerates mixing in *real* selectors too (even if they were created with reselect, directly).
-- I wrote it in ES5 because I'm sick of everything needing a compile step.
 
 ## install
 

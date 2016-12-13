@@ -4,16 +4,30 @@
   "version": "2.0.2",
   "author": "Henrik Joreteg <henrik@joreteg.com> (joreteg.com)",
   "dependencies": {
-    "reselect": "^2.5.3"
+    "reselect": "2.5.4"
   },
   "license": "MIT",
   "main": "index.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
-    "test": "node test.js",
+    "build": "standard && rollup -c rollup.config.js",
+    "test": "npm run build && node test.js",
     "test-watch": "nodemon test.js"
   },
+  "files": [
+    "src",
+    "index.js"
+  ],
   "devDependencies": {
+    "buble": "^0.14.3",
     "nodemon": "^1.10.2",
+    "rollup": "^0.37.0",
+    "standard": "^8.6.0",
     "tape": "4.6.0"
+  },
+  "standard": {
+    "ignore": [
+      "index.js"
+    ]
   }
 }
