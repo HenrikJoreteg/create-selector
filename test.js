@@ -3,8 +3,6 @@ const test = require('tape')
 const createSelector = require('./index').createSelector
 const resolveSelectors = require('./index').resolveSelectors
 
-const id = id => id
-
 test('returns a deferred selector', (t) => {
   const lastFunc = (someId, sameId) => someId === sameId
   const deferredSelector = createSelector(
@@ -15,6 +13,7 @@ test('returns a deferred selector', (t) => {
   t.ok(deferredSelector.deps, 'should have deps flag')
   t.ok(deferredSelector.resultFunc === lastFunc, 'should still have resultFunc prop')
 
+  const id = id => id
   const sel = deferredSelector({someString: id, someOtherString: id}, ['someString', 'someOtherString'])
   t.ok(!sel.deps, 'should not have deps')
   t.ok(sel.resultFunc === lastFunc, 'should have resultFunc prop')
@@ -41,14 +40,22 @@ test('resolves multiple levels down', (t) => {
     id => id
   )
 
+  // mix in a selector created by reselect
+  const dep4 = realCreateSelector(
+    idSelector,
+    id => id
+  )
+
   const final = createSelector(
     'dep1',
     dep2,
-    dep3,
-    (id, thing, other) =>
+    'dep3',
+    dep4,
+    (id, thing, other, stuff) =>
       id === 'hi' &&
       id === thing &&
-      id === other
+      id === other &&
+      id === stuff
   )
 
   const obj = {
@@ -56,11 +63,41 @@ test('resolves multiple levels down', (t) => {
     dep1,
     dep2,
     dep3,
+    dep4,
     final
   }
 
   resolveSelectors(obj)
 
   t.ok(obj.final({id: 'hi'}) === true, 'as')
+  t.end()
+})
+
+test('throws error if cannot resolve selectors because all string references', (t) => {
+  t.throws(() => {
+    resolveSelectors({
+      dep1: createSelector(
+        'dep1',
+        one => one
+      )
+    })
+  })
+  t.end()
+})
+
+test('throws if unresolvable', (t) => {
+  t.throws(() => {
+    resolveSelectors({
+      dep0: id => id,
+      dep1: createSelector(
+        'dep0',
+        one => one
+      ),
+      dep2: createSelector(
+        'somethingBogus',
+        one => one
+      )
+    })
+  })
   t.end()
 })

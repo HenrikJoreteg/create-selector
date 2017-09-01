@@ -36,16 +36,16 @@ const resolveSelectors = obj => {
   for (const selectorName in obj) {
     const fn = obj[selectorName];
     if (!isResolved(selectorName)) {
-      fn.deps = fn.deps.map(val => {
-        if (!val) {
-          throw Error('Invalid input dependency found for ' + selectorName)
-        }
+      fn.deps = fn.deps.map((val, index) => {
         // is it already just a name
         if (obj[val]) return val
         // if not, look for it
         for (const key in obj) {
-          if (obj[key] === val) return key
+          if (obj[key] === val) {
+            return key
+          }
         }
+        throw Error(`The input selector at index ${index} for '${selectorName}' is missing from the object passed to resolveSelectors()`)
       });
     } else {
       hasAtLeastOneResolved = true;
@@ -53,7 +53,7 @@ const resolveSelectors = obj => {
   }
 
   if (!hasAtLeastOneResolved) {
-    throw Error('Must have some inputs that don\'t have dependencies')
+    throw Error(`You must pass at least one real selector. If they're all string references there's no`)
   }
 
   const depsAreResolved = deps => deps.every(isResolved);
