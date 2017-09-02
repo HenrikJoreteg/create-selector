@@ -4,7 +4,7 @@
   "version": "2.1.0",
   "author": "Henrik Joreteg <henrik@joreteg.com> (joreteg.com)",
   "dependencies": {
-    "reselect": "^3.0.1"
+    "reselect": "3.0.1"
   },
   "license": "MIT",
   "main": "index.js",

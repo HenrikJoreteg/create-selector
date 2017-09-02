@@ -55,6 +55,14 @@ that's it!
 npm install create-selector
 ```
 
+## changes
+
+- `2.2.0`
+  - added support for fully resolved input selectors not having to be on the final object
+  - improved error handling
+  - more test coverage
+  - updated dependencies
+
 ## credits
 
 If you like this follow [@HenrikJoreteg](http://twitter.com/henrikjoreteg) on twitter. But in terms of credit, this is just a simple util on top of [reselect](https://github.com/reactjs/reselect) all the real magic is in there.
