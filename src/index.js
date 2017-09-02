@@ -24,23 +24,43 @@ export const createSelector = (...fns) => {
 }
 
 export const resolveSelectors = obj => {
+  // an item is resolved if it is either a
+  // function with no dependencies or if
+  // it's on the object with no dependencies
   const isResolved = name =>
-    !obj[name].deps
+    (name.call && !name.deps) || !obj[name].deps
 
+  // flag for checking if we have *any*
   let hasAtLeastOneResolved = false
+
   // extract all deps and any resolved items
   for (const selectorName in obj) {
     const fn = obj[selectorName]
     if (!isResolved(selectorName)) {
       fn.deps = fn.deps.map((val, index) => {
-        // is it already just a name
-        if (obj[val]) return val
-        // if not, look for it
-        for (const key in obj) {
-          if (obj[key] === val) {
-            return key
+        // if it is a function not a string
+        if (val.call) {
+          // look for it already on the object
+          for (const key in obj) {
+            if (obj[key] === val) {
+              // return its name if found
+              return key
+            }
+          }
+          // we didn't find it and it doesn't have a name
+          // but if it's a fully resolved selector that's ok
+          if (!val.deps) {
+            hasAtLeastOneResolved = true
+            return val
           }
         }
+
+        // the `val` is a string that exists on the object return the string
+        // we'll resolve it later
+        if (obj[val]) return val
+
+        // if we get here, its a string that doesn't exist on the object
+        // which won't work, so we throw a helpful error
         throw Error(`The input selector at index ${index} for '${selectorName}' is missing from the object passed to resolveSelectors()`)
       })
     } else {

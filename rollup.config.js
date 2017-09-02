@@ -1,5 +1,8 @@
 export default {
-  entry: 'src/index.js',
-  format: 'cjs',
-  dest: 'index.js'
+  input: 'src/index.js',
+  output: {
+    format: 'cjs',
+    file: 'index.js'
+  },
+  external: [ 'reselect' ]
 }

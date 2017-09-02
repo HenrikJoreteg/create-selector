@@ -101,3 +101,35 @@ test('throws if unresolvable', (t) => {
   })
   t.end()
 })
+
+test('tolerate selectors that don\'t exist on the shared object if not deferred', (t) => {
+  const idSelector = state => state.id
+
+  const dep1 = createSelector(
+    idSelector,
+    id => id
+  )
+
+  const dep2 = createSelector(
+    idSelector,
+    'dep1',
+    (val1, val2) =>
+      val1 === 'hi' &&
+      val1 === val2
+  )
+
+  // note: this is missing the `idSelector`
+  const obj = {
+    dep1,
+    dep2
+  }
+
+  t.doesNotThrow(() => {
+    resolveSelectors(obj)
+  })
+
+  resolveSelectors(obj)
+
+  t.ok(obj.dep2({id: 'hi'}) === true, 'as')
+  t.end()
+})
