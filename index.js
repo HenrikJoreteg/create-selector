@@ -4,48 +4,50 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var reselect = require('reselect');
 
-const ensureFn = (obj, name) => {
+var ensureFn = function (obj, name) {
   if (typeof name !== 'string') {
     return name
   }
-  const found = obj[name];
+  var found = obj[name];
   if (!found) {
     throw Error('No selector ' + name + ' found on the obj.')
   }
   return found
 };
 
-const createSelector$1 = (...fns) => {
-  const resultFunc = fns.slice(-1)[0];
-  const deferredSelector = (obj, deps) => {
-    const newArgs = deps.map(fn => ensureFn(obj, fn));
+var createSelector$1 = function () {
+  var fns = [], len = arguments.length;
+  while ( len-- ) fns[ len ] = arguments[ len ];
+
+  var resultFunc = fns.slice(-1)[0];
+  var deferredSelector = function (obj, deps) {
+    var newArgs = deps.map(function (fn) { return ensureFn(obj, fn); });
     newArgs.push(resultFunc);
-    return reselect.createSelector(...newArgs)
+    return reselect.createSelector.apply(void 0, newArgs)
   };
   deferredSelector.deps = fns.slice(0, -1);
   deferredSelector.resultFunc = resultFunc;
   return deferredSelector
 };
 
-const resolveSelectors = obj => {
+var resolveSelectors = function (obj) {
   // an item is resolved if it is either a
   // function with no dependencies or if
   // it's on the object with no dependencies
-  const isResolved = name =>
-    (name.call && !name.deps) || !obj[name].deps;
+  var isResolved = function (name) { return (name.call && !name.deps) || !obj[name].deps; };
 
   // flag for checking if we have *any*
-  let hasAtLeastOneResolved = false;
+  var hasAtLeastOneResolved = false;
 
   // extract all deps and any resolved items
-  for (const selectorName in obj) {
-    const fn = obj[selectorName];
+  var loop = function ( selectorName ) {
+    var fn = obj[selectorName];
     if (!isResolved(selectorName)) {
-      fn.deps = fn.deps.map((val, index) => {
+      fn.deps = fn.deps.map(function (val, index) {
         // if it is a function not a string
         if (val.call) {
           // look for it already on the object
-          for (const key in obj) {
+          for (var key in obj) {
             if (obj[key] === val) {
               // return its name if found
               return key
@@ -61,27 +63,29 @@ const resolveSelectors = obj => {
 
         // the `val` is a string that exists on the object return the string
         // we'll resolve it later
-        if (obj[val]) return val
+        if (obj[val]) { return val }
 
         // if we get here, its a string that doesn't exist on the object
         // which won't work, so we throw a helpful error
-        throw Error(`The input selector at index ${index} for '${selectorName}' is missing from the object passed to resolveSelectors()`)
+        throw Error(("The input selector at index " + index + " for '" + selectorName + "' is missing from the object passed to resolveSelectors()"))
       });
     } else {
       hasAtLeastOneResolved = true;
     }
-  }
+  };
+
+  for (var selectorName in obj) loop( selectorName );
 
   if (!hasAtLeastOneResolved) {
-    throw Error(`You must pass at least one real selector. If they're all string references there's no`)
+    throw Error("You must pass at least one real selector. If they're all string references there's no")
   }
 
-  const depsAreResolved = deps => deps.every(isResolved);
+  var depsAreResolved = function (deps) { return deps.every(isResolved); };
 
-  const resolve = () => {
-    let hasUnresolved = false;
-    for (const selectorName in obj) {
-      const fn = obj[selectorName];
+  var resolve = function () {
+    var hasUnresolved = false;
+    for (var selectorName in obj) {
+      var fn = obj[selectorName];
       if (!isResolved(selectorName)) {
         hasUnresolved = true;
         if (depsAreResolved(fn.deps)) {
@@ -92,10 +96,10 @@ const resolveSelectors = obj => {
     return hasUnresolved
   };
 
-  let startTime;
+  var startTime;
   while (resolve()) {
-    if (!startTime) startTime = Date.now();
-    const duration = Date.now() - startTime;
+    if (!startTime) { startTime = Date.now(); }
+    var duration = Date.now() - startTime;
     if (duration > 500) {
       throw Error('Could not resolve selector dependencies.')
     }
