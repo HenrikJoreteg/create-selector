@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "main": "index.js",
-  "module": "src/index.js",
+  "module": "index.js",
   "scripts": {
     "build": "standard && rollup -c rollup.config.js",
     "test": "npm run build && node test.js",
