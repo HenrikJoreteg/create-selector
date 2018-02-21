@@ -27,8 +27,7 @@ export const resolveSelectors = obj => {
   // an item is resolved if it is either a
   // function with no dependencies or if
   // it's on the object with no dependencies
-  const isResolved = name =>
-    (name.call && !name.deps) || !obj[name].deps
+  const isResolved = name => (name.call && !name.deps) || !obj[name].deps
 
   // flag for checking if we have *any*
   let hasAtLeastOneResolved = false
@@ -61,7 +60,9 @@ export const resolveSelectors = obj => {
 
         // if we get here, its a string that doesn't exist on the object
         // which won't work, so we throw a helpful error
-        throw Error(`The input selector at index ${index} for '${selectorName}' is missing from the object passed to resolveSelectors()`)
+        throw Error(
+          `The input selector at index ${index} for '${selectorName}' is missing from the object passed to resolveSelectors()`
+        )
       })
     } else {
       hasAtLeastOneResolved = true
@@ -69,7 +70,9 @@ export const resolveSelectors = obj => {
   }
 
   if (!hasAtLeastOneResolved) {
-    throw Error(`You must pass at least one real selector. If they're all string references there's no`)
+    throw Error(
+      `You must pass at least one real selector. If they're all string references there's no`
+    )
   }
 
   const depsAreResolved = deps => deps.every(isResolved)
