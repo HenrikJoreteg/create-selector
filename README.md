@@ -57,7 +57,7 @@ npm install create-selector
 
 ## changes
 
-* `3.0.0` building with microbundle (should fix issues with module field in package.json)
+* `4.0.1` building with microbundle (should fix issues with module field in package.json)
 * `2.2.0`
   * added support for fully resolved input selectors not having to be on the final object
   * improved error handling
