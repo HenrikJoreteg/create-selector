@@ -3,6 +3,14 @@ const test = require('tape')
 const { createSelector } = require('./dist')
 const { resolveSelectors } = require('./dist')
 
+function bm (fn) {
+  const start = new Date().getTime()
+  fn()
+
+  // console.log('Finished in:', new Date().getTime() - start, ' ms')
+  return new Date().getTime() - start
+}
+
 test('returns a deferred selector', t => {
   const lastFunc = (someId, sameId) => someId === sameId
   const deferredSelector = createSelector(
@@ -61,6 +69,58 @@ test('resolves multiple levels down', t => {
   resolveSelectors(obj)
 
   t.ok(obj.final({ id: 'hi' }) === true, 'as')
+  t.end()
+})
+
+test('resolves large set of nested selectors', t => {
+  const idSelector = state => state.id
+  const dep0 = createSelector(idSelector, id => id)
+  const obj = { idSelector, dep0 }
+
+  let count = 1
+  while (count < 1000) {
+    const prevSelector = obj[`dep${count - 1}`]
+    obj[`dep${count}`] = createSelector(
+      prevSelector,
+      id => id
+    )
+    count++
+  }
+
+  obj.final = createSelector(
+    ...Object.values(obj),
+    (id, ...rest) => id === 'hi' && rest.every(i => i === id)
+  )
+
+  const duration = bm(() => resolveSelectors(obj))
+
+  t.ok(obj.final({ id: 'hi' }) === true, 'as')
+  t.ok(duration < 70, `should not take too long (took ${duration} ms)`)
+  t.end()
+})
+
+test('resolves large set of flat selectors', t => {
+  const idSelector = state => state.id
+  const obj = { idSelector }
+
+  let count = 0
+  while (count < 1000) {
+    obj[`dep${count}`] = createSelector(
+      idSelector,
+      id => id
+    )
+    count++
+  }
+
+  obj.final = createSelector(
+    ...Object.values(obj),
+    (id, ...rest) => id === 'hi' && rest.every(i => i === id)
+  )
+
+  const duration = bm(() => resolveSelectors(obj))
+
+  t.ok(obj.final({ id: 'hi' }) === true, 'as')
+  t.ok(duration < 70, `should not take too long (took ${duration} ms)`)
   t.end()
 })
 
