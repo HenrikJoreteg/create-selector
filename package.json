@@ -1,7 +1,7 @@
 {
   "name": "create-selector",
   "description": "Wrapper for reselect to allow deferring creation of selectors.",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "author": "Henrik Joreteg <henrik@joreteg.com> (joreteg.com)",
   "dependencies": {
     "reselect": "3.0.1"
