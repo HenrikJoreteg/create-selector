@@ -46,8 +46,8 @@ that's it!
 
 ## Notes
 
-* There's some tests to show this does what it's supposed to but most of the actual work happens in reselect.
-* It tolerates mixing in _real_ selectors too (even if they were created with reselect, directly).
+- There's some tests to show this does what it's supposed to but most of the actual work happens in reselect.
+- It tolerates mixing in _real_ selectors too (even if they were created with reselect, directly).
 
 ## install
 
@@ -57,12 +57,13 @@ npm install create-selector
 
 ## changes
 
-* `4.0.1` building with microbundle (should fix issues with module field in package.json)
-* `2.2.0`
-  * added support for fully resolved input selectors not having to be on the final object
-  * improved error handling
-  * more test coverage
-  * updated dependencies
+- `4.0.2` Optimizing bundle resolution algorithm. Huge thanks to [@rudionrails](https://github.com/rudionrails) and [@layflags](https://github.com/layflags).
+- `4.0.1` building with microbundle (should fix issues with module field in package.json)
+- `2.2.0`
+  - added support for fully resolved input selectors not having to be on the final object
+  - improved error handling
+  - more test coverage
+  - updated dependencies
 
 ## credits
 
