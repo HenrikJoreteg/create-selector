@@ -7,10 +7,10 @@
     "reselect": "3.0.1"
   },
   "devDependencies": {
-    "microbundle": "0.4.4",
-    "nodemon": "1.11.0",
-    "standard": "10.0.3",
-    "tape": "4.8.0"
+    "microbundle": "0.11.0",
+    "nodemon": "1.18.10",
+    "standard": "12.0.1",
+    "tape": "4.10.1"
   },
   "files": [
     "dist"
@@ -23,7 +23,7 @@
     "semi": false
   },
   "scripts": {
-    "build": "standard && microbundle",
+    "build": "standard --fix && microbundle --no-compress",
     "test": "npm run build && node test.js",
     "test-watch": "nodemon test.js"
   },

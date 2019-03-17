@@ -38,9 +38,15 @@ test('returns a deferred selector', t => {
 test('resolves multiple levels down', t => {
   const idSelector = state => state.id
 
-  const dep1 = createSelector('idSelector', id => id)
+  const dep1 = createSelector(
+    'idSelector',
+    id => id
+  )
 
-  const dep2 = createSelector('dep1', id => id)
+  const dep2 = createSelector(
+    'dep1',
+    id => id
+  )
 
   // mix in a selector created by reselect
   const dep3 = realCreateSelector(idSelector, id => id)
@@ -74,7 +80,10 @@ test('resolves multiple levels down', t => {
 
 test('resolves large set of nested selectors', t => {
   const idSelector = state => state.id
-  const dep0 = createSelector(idSelector, id => id)
+  const dep0 = createSelector(
+    idSelector,
+    id => id
+  )
   const obj = { idSelector, dep0 }
 
   let count = 1
@@ -95,7 +104,7 @@ test('resolves large set of nested selectors', t => {
   const duration = bm(() => resolveSelectors(obj))
 
   t.ok(obj.final({ id: 'hi' }) === true, 'as')
-  t.ok(duration < 70, `should not take too long (took ${duration} ms)`)
+  t.ok(duration < 100, `should not take too long (took ${duration} ms)`)
   t.end()
 })
 
@@ -120,14 +129,17 @@ test('resolves large set of flat selectors', t => {
   const duration = bm(() => resolveSelectors(obj))
 
   t.ok(obj.final({ id: 'hi' }) === true, 'as')
-  t.ok(duration < 70, `should not take too long (took ${duration} ms)`)
+  t.ok(duration < 100, `should not take too long (took ${duration} ms)`)
   t.end()
 })
 
 test('throws error if cannot resolve selectors because all string references', t => {
   t.throws(() => {
     resolveSelectors({
-      dep1: createSelector('dep1', one => one)
+      dep1: createSelector(
+        'dep1',
+        one => one
+      )
     })
   })
   t.end()
@@ -137,8 +149,14 @@ test('throws if unresolvable', t => {
   t.throws(() => {
     resolveSelectors({
       dep0: id => id,
-      dep1: createSelector('dep0', one => one),
-      dep2: createSelector('somethingBogus', one => one)
+      dep1: createSelector(
+        'dep0',
+        one => one
+      ),
+      dep2: createSelector(
+        'somethingBogus',
+        one => one
+      )
     })
   })
   t.end()
@@ -147,7 +165,10 @@ test('throws if unresolvable', t => {
 test("tolerate selectors that don't exist on the shared object if not deferred", t => {
   const idSelector = state => state.id
 
-  const dep1 = createSelector(idSelector, id => id)
+  const dep1 = createSelector(
+    idSelector,
+    id => id
+  )
 
   const dep2 = createSelector(
     idSelector,
