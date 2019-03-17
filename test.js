@@ -104,7 +104,7 @@ test('resolves large set of nested selectors', t => {
   const duration = bm(() => resolveSelectors(obj))
 
   t.ok(obj.final({ id: 'hi' }) === true, 'as')
-  t.ok(duration < 100, `should not take too long (took ${duration} ms)`)
+  t.ok(duration < 150, `should not take too long (took ${duration} ms)`)
   t.end()
 })
 

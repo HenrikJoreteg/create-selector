@@ -32,29 +32,16 @@ export const resolveSelectors = obj => {
   // flag for checking if we have *any*
   let hasAtLeastOneResolved = false
 
-  // keep track of not yet extracted selectors and save significant
-  // loops on large objects
-  const selectorsToExtract = Object.assign({}, obj)
-
   // extract all deps and any resolved items
-  for (const selectorName in selectorsToExtract) {
-    const fn = selectorsToExtract[selectorName]
-
+  for (const selectorName in obj) {
+    const fn = obj[selectorName]
     if (!isResolved(selectorName)) {
       fn.deps = fn.deps.map((val, index) => {
         // if it is a function not a string
         if (val.call) {
-          // if it has been extracted in in earlier calls, exit
-          if (val.selectorName) return val.selectorName
-
           // look for it already on the object
-          for (const key in selectorsToExtract) {
-            if (selectorsToExtract[key] === val) {
-              // set selectorName to optimize consecutive calls and remove
-              // from object to not loop through it again
-              val.selectorName = key
-              delete selectorsToExtract[key]
-
+          for (const key in obj) {
+            if (obj[key] === val) {
               // return its name if found
               return key
             }
@@ -69,7 +56,7 @@ export const resolveSelectors = obj => {
 
         // the `val` is a string that exists on the object return the string
         // we'll resolve it later
-        if (selectorsToExtract[val]) return val
+        if (obj[val]) return val
 
         // if we get here, its a string that doesn't exist on the object
         // which won't work, so we throw a helpful error
