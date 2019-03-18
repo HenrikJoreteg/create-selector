@@ -57,7 +57,7 @@ npm install create-selector
 
 ## changes
 
-- `4.0.2` Optimizing bundle resolution algorithm. Huge thanks to [@rudionrails](https://github.com/rudionrails) and [@layflags](https://github.com/layflags).
+- `4.0.3` Optimizing selector resolution algorithm. Huge thanks to [@rudionrails](https://github.com/rudionrails) and [@layflags](https://github.com/layflags).
 - `4.0.1` building with microbundle (should fix issues with module field in package.json)
 - `2.2.0`
   - added support for fully resolved input selectors not having to be on the final object
