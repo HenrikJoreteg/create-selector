@@ -23,7 +23,7 @@
     "semi": false
   },
   "scripts": {
-    "build": "standard --fix && microbundle --no-compress",
+    "build": "rm -rf ./dist && standard --fix && microbundle --no-compress --no-sourcemap",
     "test": "npm run build && node test.js",
     "test-watch": "nodemon test.js"
   },

@@ -57,6 +57,7 @@ npm install create-selector
 
 ## changes
 
+- `5.0.0` Removed source maps from build. Fixed npm security warnings w/ audit.
 - `4.0.3` Optimizing selector resolution algorithm. Huge thanks to [@rudionrails](https://github.com/rudionrails) and [@layflags](https://github.com/layflags).
 - `4.0.1` building with microbundle (should fix issues with module field in package.json)
 - `2.2.0`
